@@ -1,0 +1,13 @@
+http://wakingup.libsyn.com/rss
+http://files.libertyfund.org/econtalk/EconTalk.xml
+http://feed.thisamericanlife.org/talpodcast
+https://www.npr.org/rss/podcast.php?id=510289
+http://feeds.gimletmedia.com/hearstartup
+https://wtfpod.libsyn.com/rss
+http://feeds.99percentinvisible.org/99percentinvisible
+http://feeds.feedburner.com/freakonomicsradio
+http://feeds.wnyc.org/radiolab
+http://feeds.feedburner.com/SlatesWhistlestop
+http://feeds.feedburner.com/SlatePoliticalGabfest
+http://feeds.feedburner.com/SlateCultureGabfest
+http://feeds.megaphone.fm/trumpcast
