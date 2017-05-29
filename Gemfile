@@ -17,13 +17,13 @@ gem 'puma', '~> 3.0'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1.7'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors', '~>0.4.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -51,4 +51,5 @@ gem 'feedjira', '~> 2.0'
 gem 'pry', '~> 0.10'
 gem 'awesome_print', '~> 1.7'
 gem 'active_model_serializers', '~> 0.10'
-
+gem 'knock', '~> 2.0'
+gem 'dotenv-rails', groups: [:development, :test]
