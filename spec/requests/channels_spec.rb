@@ -8,12 +8,12 @@ RSpec.describe "Channels API", type: :request do
 
   describe "GET /channels" do
     it "does not allow an unauthenticated request" do
-      get "/channels"
+      get channels_path
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
-      before { get "/channels", headers: headers }
+      before { get channels_path, headers: headers }
 
       it "returns channels" do
         expect(json).to_not be_empty
@@ -27,13 +27,13 @@ RSpec.describe "Channels API", type: :request do
 
   describe "GET /channels/:id" do
     it "does not allow an unauthenticated request" do
-      get "/channels/#{channels.first.id}"
+      get channel_path(id: channels.first.id)
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
       context "when the record exists" do
-        before { get "/channels/#{channels.first.id}", headers: headers }
+        before { get channel_path(id: channels.first.id), headers: headers }
 
         it "returns the channel" do
           expect(json).to_not be_empty
@@ -46,7 +46,7 @@ RSpec.describe "Channels API", type: :request do
       end
 
       context "when the record does not exist" do
-        before { get "/channels/99999", headers: headers }
+        before { get channel_path(id: 99999), headers: headers }
 
         it "returns status code 404" do
           expect(response).to have_http_status(404)

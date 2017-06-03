@@ -9,13 +9,13 @@ RSpec.describe "Items API" do
 
   describe "GET /channels/:channel_id/items" do
     it "does not allow an unauthenticated request" do
-      get "/channels/#{channel.id}/items"
+      get channel_items_path(channel_id: channel.id)
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
       context "when channel exists" do
-        before { get "/channels/#{channel.id}/items", headers: headers }
+        before { get channel_items_path(channel_id: channel.id), headers: headers }
 
         it "returns status code 200" do
           expect(response).to have_http_status(200)
@@ -27,7 +27,7 @@ RSpec.describe "Items API" do
       end
 
       context "when channel does not exist" do
-        before { get "/channels/999999/items", headers: headers }
+        before { get channel_items_path(channel_id: 999999), headers: headers }
 
         it "returns status code 404" do
           expect(response).to have_http_status(404)
@@ -42,13 +42,13 @@ RSpec.describe "Items API" do
 
   describe "GET /channels/:channel_id/items/:id" do
     it "does not allow an unauthenticated request" do
-      get "/channels/#{channel.id}/items/#{items.first.id}"
+      get channel_item_path(channel_id: channel.id, id: items.first.id)
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
       context "when item exists" do
-        before { get "/channels/#{channel.id}/items/#{items.first.id}", headers: headers }
+        before { get channel_item_path(channel_id: channel.id, id: items.first.id), headers: headers }
 
         it "returns status code 200" do
           expect(response).to have_http_status(200)
@@ -60,7 +60,7 @@ RSpec.describe "Items API" do
       end
 
       context "when item does not exist" do
-        before { get "/channels/#{channel.id}/items/999999", headers: headers }
+        before { get channel_item_path(channel_id: channel.id, id: 999999), headers: headers }
 
         it "returns status code 404" do
           expect(response).to have_http_status(404)
