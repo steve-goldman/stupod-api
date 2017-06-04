@@ -3,5 +3,7 @@ Rails.application.routes.draw do
     resources :items, only: [:index, :show]
   end
 
-  resources :playlists
+  resources :playlists do
+    resources :playlist_elements, except: :show
+  end
 end

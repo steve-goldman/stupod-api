@@ -9,6 +9,9 @@ RSpec.describe PlaylistElement, type: :model do
     subject { FactoryGirl.build :playlist_element }
     it { should validate_presence_of :playlist_id }
     it { should validate_presence_of :item_id }
+  end
+
+  describe "associations" do
     it { should belong_to :playlist }
     it { should belong_to :item }
   end
