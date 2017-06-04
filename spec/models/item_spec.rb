@@ -17,6 +17,7 @@ RSpec.describe Item, type: :model do
   
   describe "associations" do
     it { should belong_to(:channel) }
+    it { should have_many(:playlist_elements).dependent(:destroy) }
   end
 
 end
