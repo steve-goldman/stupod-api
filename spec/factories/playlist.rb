@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :playlist do
-    user { Faker::Name.name }
+    association :user
     name { Faker::Name.name }
   end
 end
