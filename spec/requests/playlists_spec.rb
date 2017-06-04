@@ -2,11 +2,11 @@ require "rails_helper"
 
 RSpec.describe "Playlists API", type: :request do
 
-  let(:user) { Faker::TwinPeaks.character }
-  let(:other_user) { Faker::TwinPeaks.character }
+  let(:user) { FactoryGirl.create :user, token_id: "user-token-id" }
+  let(:other_user) { FactoryGirl.create :user, token_id: "other-user-token-id" }
   let!(:playlists) { FactoryGirl.create_list(:playlist, 10, user: user) }
   let!(:other_playlists) { FactoryGirl.create_list(:playlist, 10, user: other_user) }
-  let(:token) { Knock::AuthToken.new(payload: { sub: user }).token }
+  let(:token) { Knock::AuthToken.new(payload: { sub: user.token_id }).token }
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /playlists" do
