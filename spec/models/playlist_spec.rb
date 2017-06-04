@@ -10,6 +10,10 @@ RSpec.describe Playlist, type: :model do
     it { should validate_uniqueness_of(:name).scoped_to(:user_id) }
     it { should validate_presence_of :user_id }
     it { should validate_presence_of :name }
+  end
+
+  describe "associations" do
     it { should belong_to :user }
+    it { should have_many(:playlist_elements).dependent(:destroy) }
   end
 end

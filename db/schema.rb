@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170604212154) do
+ActiveRecord::Schema.define(version: 20170604214019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,16 @@ ActiveRecord::Schema.define(version: 20170604212154) do
     t.datetime "updated_at",  null: false
     t.index ["channel_id"], name: "index_items_on_channel_id", using: :btree
     t.index ["guid"], name: "index_items_on_guid", using: :btree
+  end
+
+  create_table "playlist_elements", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "playlist_id", null: false
+    t.uuid     "item_id",     null: false
+    t.integer  "position",    null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["item_id"], name: "index_playlist_elements_on_item_id", using: :btree
+    t.index ["playlist_id"], name: "index_playlist_elements_on_playlist_id", using: :btree
   end
 
   create_table "playlists", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
