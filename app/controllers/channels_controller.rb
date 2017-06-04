@@ -2,7 +2,7 @@ class ChannelsController < ApplicationController
   before_action :set_channel, only: :show
 
   def index
-    json_response Channel.all, ChannelShortSerializer
+    json_response Channel.all, each_serializer: ChannelShortSerializer
   end
 
   def show

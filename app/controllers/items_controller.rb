@@ -3,7 +3,7 @@ class ItemsController < ApplicationController
   before_action :set_item, only: :show
 
   def index
-    json_response @channel.items, ItemShortSerializer
+    json_response @channel.items, each_serializer: ItemShortSerializer
   end
 
   def show

@@ -1,5 +1,13 @@
 module Response
-  def json_response(object, serializer = nil)
-    render json: object, status: :ok, each_serializer: serializer
+  def json_response(object, options = {})
+    render render_options(object, options)
+  end
+
+  private
+
+  def render_options(object, options)
+    options[:status] = :ok unless options.key?(:status)
+    options[:json] = object
+    options
   end
 end
