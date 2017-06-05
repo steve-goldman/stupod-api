@@ -1,7 +1,8 @@
 class Channel < ActiveRecord::Base
-  has_many :items, dependent: :destroy
   validates_uniqueness_of :url
   validates_presence_of :url, :title
+  has_many :items, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
 
   def item_count
     items.count
