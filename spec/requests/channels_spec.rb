@@ -27,13 +27,13 @@ RSpec.describe "Channels API", type: :request do
 
   describe "GET /channels/:id" do
     it "does not allow an unauthenticated request" do
-      get channel_path(id: channels.first.id)
+      get channel_path(channels.first)
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
       context "when the record exists" do
-        before { get channel_path(id: channels.first.id), headers: headers }
+        before { get channel_path(channels.first), headers: headers }
 
         it "returns the channel" do
           expect(json).to_not be_empty

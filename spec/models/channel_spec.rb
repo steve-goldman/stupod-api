@@ -15,6 +15,7 @@ RSpec.describe Channel, type: :model do
 
   describe "associations" do
     it { should have_many(:items).dependent(:destroy) }
+    it { should have_many(:subscriptions).dependent(:destroy) }
   end
   
 end

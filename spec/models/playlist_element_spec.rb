@@ -7,8 +7,8 @@ RSpec.describe PlaylistElement, type: :model do
 
   describe "validations" do
     subject { FactoryGirl.build :playlist_element }
-    it { should validate_presence_of :playlist_id }
-    it { should validate_presence_of :item_id }
+    it { should validate_presence_of :playlist }
+    it { should validate_presence_of :item }
   end
 
   describe "associations" do

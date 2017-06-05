@@ -14,5 +14,6 @@ RSpec.describe User, type: :model do
 
   describe "associations" do
     it { should have_many(:playlists).dependent(:destroy) }
+    it { should have_many(:subscriptions).through(:playlists) }
   end
 end

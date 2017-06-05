@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   validates_presence_of :token_id
   validates_uniqueness_of :token_id
   has_many :playlists, dependent: :destroy
+  has_many :subscriptions, through: :playlists
 
   def self.from_token_payload payload
     user = User.find_by token_id: payload["sub"]
