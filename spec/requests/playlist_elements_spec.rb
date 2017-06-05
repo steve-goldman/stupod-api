@@ -72,13 +72,13 @@ RSpec.describe "PlaylistElementss API", type: :request do
     let(:attributes) { { id: playlist_elements.first.id, position: newPosition } }
 
     it "does not allow an unauthenticated request" do
-      put playlist_playlist_element_path(playlist, playlist_elements.first.id), params: attributes
+      put playlist_playlist_element_path(playlist, playlist_elements.first), params: attributes
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
       context "when the request is valid" do
-        before { put playlist_playlist_element_path(playlist, playlist_elements.first.id), params: attributes, headers: headers }
+        before { put playlist_playlist_element_path(playlist, playlist_elements.first), params: attributes, headers: headers }
 
         it "returns status code 204" do
           expect(response).to have_http_status(204)
@@ -89,13 +89,13 @@ RSpec.describe "PlaylistElementss API", type: :request do
 
   describe "DELETE /playlists/:playlist_id/playlist_elements/:id" do
     it "does not allow an unauthenticated request" do
-      delete playlist_playlist_element_path(playlist, playlist_elements.first.id)
+      delete playlist_playlist_element_path(playlist, playlist_elements.first)
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
       context "when the request is valid" do
-        before { delete playlist_playlist_element_path(playlist, playlist_elements.first.id), headers: headers }
+        before { delete playlist_playlist_element_path(playlist, playlist_elements.first), headers: headers }
 
         it "returns status code 204" do
           expect(response).to have_http_status(204)
@@ -103,7 +103,7 @@ RSpec.describe "PlaylistElementss API", type: :request do
       end
 
       context "when the request is invalid" do
-        before { delete playlist_playlist_element_path(other_playlist, playlist_elements.first.id), headers: headers }
+        before { delete playlist_playlist_element_path(other_playlist, playlist_elements.first), headers: headers }
 
         it "returns status code 404" do
           expect(response).to have_http_status(404)

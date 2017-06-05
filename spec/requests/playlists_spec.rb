@@ -30,13 +30,13 @@ RSpec.describe "Playlists API", type: :request do
 
   describe "GET /playlists/:id" do
     it "does not allow an unauthenticated request" do
-      get playlist_path(playlists.first.id)
+      get playlist_path(playlists.first)
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
       context "when the record exists and belongs to the user" do
-        before { get playlist_path(playlists.first.id), headers: headers }
+        before { get playlist_path(playlists.first), headers: headers }
 
         it "returns the playlist" do
           expect(json).to_not be_empty
@@ -49,7 +49,7 @@ RSpec.describe "Playlists API", type: :request do
       end
 
       context "when the record exists and belongs to another user" do
-        before { get playlist_path(other_playlists.first.id), headers: headers }
+        before { get playlist_path(other_playlists.first), headers: headers }
 
         it "returns status code 404" do
           expect(response).to have_http_status(404)
@@ -116,13 +116,13 @@ RSpec.describe "Playlists API", type: :request do
     let(:attributes) { { id: playlists.first.id, name: newName } }
 
     it "does not allow an unauthenticated request" do
-      put playlist_path(playlists.first.id), params: attributes
+      put playlist_path(playlists.first), params: attributes
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
       context "when the request is valid" do
-        before { put playlist_path(playlists.first.id), params: attributes, headers: headers }
+        before { put playlist_path(playlists.first), params: attributes, headers: headers }
 
         it "returns status code 204" do
           expect(response).to have_http_status(204)
@@ -131,7 +131,7 @@ RSpec.describe "Playlists API", type: :request do
 
       context "when the request is invalid" do
         let(:invalid_attributes) { { id: playlists.first.id, name: playlists.last.name } }
-        before { put playlist_path(playlists.first.id), params: invalid_attributes, headers: headers }
+        before { put playlist_path(playlists.first), params: invalid_attributes, headers: headers }
 
         it "returns status code 422" do
           expect(response).to have_http_status(422)
@@ -146,13 +146,13 @@ RSpec.describe "Playlists API", type: :request do
 
   describe "DELETE /playlists/:id" do
     it "does not allow an unauthenticated request" do
-      delete playlist_path(playlists.first.id)
+      delete playlist_path(playlists.first)
       assert_response :unauthorized
     end
 
     context "when the request is authenticated" do
       context "when the request is valid" do
-        before { delete playlist_path(playlists.first.id), headers: headers }
+        before { delete playlist_path(playlists.first), headers: headers }
 
         it "returns status code 204" do
           expect(response).to have_http_status(204)
@@ -160,7 +160,7 @@ RSpec.describe "Playlists API", type: :request do
       end
 
       context "when the request is invalid" do
-        before { delete playlist_path(other_playlists.first.id), headers: headers }
+        before { delete playlist_path(other_playlists.first), headers: headers }
 
         it "returns status code 404" do
           expect(response).to have_http_status(404)
