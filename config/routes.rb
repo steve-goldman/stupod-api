@@ -6,4 +6,6 @@ Rails.application.routes.draw do
   resources :playlists do
     resources :playlist_elements, except: :show
   end
+
+  resources :subscriptions, except: :show
 end
