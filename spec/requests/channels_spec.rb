@@ -22,37 +22,20 @@ RSpec.describe "Channels API", type: :request do
     context "when the request is authenticated" do
       context "when the channel exists" do
         before { post channels_path, params: attributes_exists, headers: headers }
-
-        it "returns a channel" do
-          expect(json["url"]).to eq(existing_url)
-        end
-
-        it "returns status code 201" do
-          expect(response).to have_http_status(201)
-        end
+        it_behaves_like "a create request"
       end
 
       context "when the channel is new" do
         before { allow_any_instance_of(ChannelLoader)
                  .to receive(:load).and_return(FactoryGirl.build(:channel, url: new_url)) }
         before { post channels_path, params: attributes_new, headers: headers }
-
-        it "returns a channel" do
-          expect(json["url"]).to eq(new_url)
-        end
-
-        it "returns status code 201" do
-          expect(response).to have_http_status(201)
-        end
+        it_behaves_like "a create request"
       end
 
       context "when the channel is not loadable" do
         before { allow_any_instance_of(ChannelLoader).to receive(:load).and_raise }
         before { post channels_path, params: attributes_not_loadable, headers: headers }
-
-        it "returns status code 422" do
-          expect(response).to have_http_status(422)
-        end
+        it_behaves_like "an unprocessable request", "Unable to load channel"
       end
     end
   end

@@ -7,8 +7,8 @@ class ChannelsController < ApplicationController
       begin
         channel = ChannelLoader.new.load params[:url]
         json_response channel, status: :created
-      rescue => e
-        render json: { message: e }, status: :unprocessable_entity
+      rescue
+        render json: { message: "Unable to load channel" }, status: :unprocessable_entity
       end
     else
       json_response channel, status: :created

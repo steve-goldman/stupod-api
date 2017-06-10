@@ -33,26 +33,12 @@ RSpec.describe "Subscriptions API", type: :request do
     context "when the request is authenticated" do
       context "when the request is valid" do
         before { post subscriptions_path, params: attributes, headers: headers }
-
-        it "creates a subscription" do
-          expect(json["channel_id"]).to eq(newChannel.id)
-        end
-
-        it "returns status code 201" do
-          expect(response).to have_http_status(201)
-        end
+        it_behaves_like "a create request"
       end
 
-      context "when the request is invalid" do
+      context "when the playlist does not exist" do
         before { post subscriptions_path, headers: headers } # missing params
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
-
-        it "returns a validation failure message" do
-          expect(response.body).to match(/Couldn't find Playlist/)
-        end
+        it_behaves_like "a request for a missing resource", "Playlist"
       end
     end
   end

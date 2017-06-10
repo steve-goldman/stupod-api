@@ -58,26 +58,12 @@ RSpec.describe "Playlists API", type: :request do
     context "when the request is authenticated" do
       context "when the request is valid" do
         before { post playlists_path, params: attributes, headers: headers }
-
-        it "creates a playlist" do
-          expect(json["name"]).to eq(name)
-        end
-
-        it "returns status code 201" do
-          expect(response).to have_http_status(201)
-        end
+        it_behaves_like "a create request"
       end
 
       context "when the request is invalid" do
         before { post playlists_path, headers: headers } # missing params
-
-        it "returns status code 422" do
-          expect(response).to have_http_status(422)
-        end
-
-        it "returns a validation failure message" do
-          expect(response.body).to match(/Validation failed/)
-        end
+        it_behaves_like "an unprocessable request"
       end
     end
   end
