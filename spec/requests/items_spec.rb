@@ -2,12 +2,13 @@ require "rails_helper"
 
 RSpec.describe "Items API" do
 
-  let!(:channel) { create(:channel) }
-  let!(:items) { FactoryGirl.create_list(:item, 20, channel: channel) }
+  let(:channel) { create(:channel) }
   let(:token) { Knock::AuthToken.new(payload: { sub: "user-token" }).token }
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /channels/:channel_id/items" do
+    let!(:items) { FactoryGirl.create_list :item, 2, channel: channel }
+
     context "when the channel exists" do
       let(:index_path) { channel_items_path(channel) }
       it_behaves_like "an indexable resource"
@@ -20,7 +21,7 @@ RSpec.describe "Items API" do
   end
 
   describe "GET /channels/:channel_id/items/:id" do
-    let(:resource) { items.first }
+    let(:resource) { FactoryGirl.create :item, channel: channel }
     let(:show_path) { channel_item_path channel, resource }
     let(:invalid_show_path) { channel_item_path channel_id: channel.id, id: 999999 }
 

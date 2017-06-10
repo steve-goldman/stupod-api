@@ -3,14 +3,13 @@ require "rails_helper"
 RSpec.describe "PlaylistElementss API", type: :request do
 
   let(:user) { FactoryGirl.create :user, token_id: "user-token-id" }
-  let!(:playlist) { FactoryGirl.create :playlist, user: user }
-  let!(:other_playlist) { FactoryGirl.create :playlist, user: user }
-  let!(:playlist_elements) { FactoryGirl.create_list(:playlist_element, 10, playlist: playlist) }
-  let!(:other_playlist_elements) { FactoryGirl.create_list(:playlist_element, 10, playlist: other_playlist) }
+  let(:playlist) { FactoryGirl.create :playlist, user: user }
   let(:token) { Knock::AuthToken.new(payload: { sub: user.token_id }).token }
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /playlists/:playlist_id/playlist_elements" do
+    let!(:playlist_elements) { FactoryGirl.create_list :playlist_element, 10, playlist: playlist }
+
     context "when the playlist exists" do
       let(:index_path) { playlist_playlist_elements_path(playlist) }
       it_behaves_like "an indexable resource"
@@ -24,7 +23,7 @@ RSpec.describe "PlaylistElementss API", type: :request do
 
   describe "POST /playlists/:playlist_id/playlist_elements" do
     let(:create_path) { playlist_playlist_elements_path playlist }
-    let(:item) { playlist_elements.first.item }
+    let(:item) { FactoryGirl.create :item }
     let(:attributes) { { item_id: item.id, position: 1 } }
 
     context "when the playlist exists" do
@@ -38,7 +37,7 @@ RSpec.describe "PlaylistElementss API", type: :request do
   end
 
   describe "PUT /playlists/:playlist_id/playlist_elements/:id" do
-    let(:resource) { playlist_elements.first }
+    let(:resource) { FactoryGirl.create :playlist_element, playlist: playlist }
     let(:new_position) { 1 }
     let(:attributes) { { id: resource.id, position: new_position } }
     let(:invalid_attributes) { { id: resource.id, position: "invalid-position" } }
@@ -56,7 +55,7 @@ RSpec.describe "PlaylistElementss API", type: :request do
   end
 
   describe "DELETE /playlists/:playlist_id/playlist_elements/:id" do
-    let(:resource) { playlist_elements.first }
+    let(:resource) { FactoryGirl.create :playlist_element, playlist: playlist }
 
     context "when the playlist exists" do
       let(:destroy_path) { playlist_playlist_element_path playlist, resource }
