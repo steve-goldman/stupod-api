@@ -77,12 +77,21 @@ RSpec.describe "PlaylistElementss API", type: :request do
     end
 
     context "when the request is authenticated" do
-      context "when the request is valid" do
-        before { put playlist_playlist_element_path(playlist, playlist_elements.first), params: attributes, headers: headers }
-
-        it "returns status code 204" do
-          expect(response).to have_http_status(204)
+      context "when the playlist exists" do
+        context "when the playlist element exists" do
+          before { put playlist_playlist_element_path(playlist, playlist_elements.first), params: attributes, headers: headers }
+          it_behaves_like "an update request"
         end
+
+        context "when the playlist element does not exist" do
+          before { put playlist_playlist_element_path(playlist_id: playlist.id, id: 999999), params: attributes, headers: headers }
+          it_behaves_like "a request for a missing resource", "PlaylistElement"
+        end
+      end
+
+      context "when the playlist does not exist" do
+        before { put playlist_playlist_element_path(playlist_id: 999999, id: playlist_elements.first.id), params: attributes, headers: headers }
+        it_behaves_like "a request for a missing resource", "Playlist"
       end
     end
   end

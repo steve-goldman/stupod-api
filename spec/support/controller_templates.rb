@@ -4,6 +4,16 @@ shared_context "an unauthenticated request" do
   end
 end
 
+shared_context "an unprocessable request" do
+  it "has status code 422" do
+    expect(response).to have_http_status(422)
+  end
+
+  it "returns a validation failure message" do
+    expect(response.body).to match(/Validation failed/)
+  end
+end
+
 shared_context "a request for a missing resource" do |resource_name|
   it "has status code 404" do
     expect(response).to have_http_status(404)
@@ -38,5 +48,10 @@ shared_context "a destroy request" do
   it "has status code 204" do
     expect(response).to have_http_status(204)
   end
+end
 
+shared_context "an update request" do
+  it "returns status code 204" do
+    expect(response).to have_http_status(204)
+  end
 end
