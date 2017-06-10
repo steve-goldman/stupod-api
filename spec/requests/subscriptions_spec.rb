@@ -5,120 +5,51 @@ RSpec.describe "Subscriptions API", type: :request do
   let(:user) { FactoryGirl.create :user, token_id: "user-token-id" }
   let!(:playlist) { FactoryGirl.create :playlist, user: user }
   let!(:channel) { FactoryGirl.create :channel }
-  let!(:subscription) { FactoryGirl.create :subscription, playlist: playlist, channel: channel }
   let(:token) { Knock::AuthToken.new(payload: { sub: user.token_id }).token }
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /subscriptions" do
-    it "does not allow an unauthenticated request" do
-      get subscriptions_path
-      assert_response :unauthorized
-    end
-
-    context "when the request is authenticated" do
-      before { get subscriptions_path, headers: headers }
-
-      it "returns subscriptions" do
-        expect(json).to_not be_empty
-      end
-
-      it "returns status code 200" do
-        expect(response).to have_http_status(200)
-      end
-    end
+    let!(:subscriptions) { FactoryGirl.create_list :subscription, 2, playlist: playlist }
+    let(:index_path) { subscriptions_path }
+    it_behaves_like "an indexable resource"
   end
 
   describe "POST /subscriptions" do
-    let!(:newChannel) { FactoryGirl.create :channel }
-    let(:attributes) { { channel_id: newChannel.id, playlist_id: playlist.id } }
+    let(:create_path) { subscriptions_path }
+    let(:new_channel) { FactoryGirl.create :channel }
+    let(:attributes) { { channel_id: new_channel.id, playlist_id: playlist.id } }
 
-    it "does not allow an unauthenticated request" do
-      post subscriptions_path, params: attributes
-      assert_response :unauthorized
+    context "when the playlist exists" do
+      it_behaves_like "a createable resource", true
     end
 
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        before { post subscriptions_path, params: attributes, headers: headers }
-
-        it "creates a subscription" do
-          expect(json["channel_id"]).to eq(newChannel.id)
-        end
-
-        it "returns status code 201" do
-          expect(response).to have_http_status(201)
-        end
-      end
-
-      context "when the request is invalid" do
-        before { post subscriptions_path, headers: headers } # missing params
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
-
-        it "returns a validation failure message" do
-          expect(response.body).to match(/Couldn't find Playlist/)
-        end
-      end
+    context "when the playlist does not exist" do
+      before { post create_path, params: { channel_id: new_channel.id, playlist_id: 999999 }, headers: headers }
+      it_behaves_like "a request for a missing resource", "Playlist"
     end
   end
 
   describe "PUT /subscriptions/:id" do
-    let!(:newPlaylist) { FactoryGirl.create :playlist, user: user }
-    let(:attributes) { { id: subscription.id, playlist_id: newPlaylist.id } }
+    let(:resource) { FactoryGirl.create :subscription, playlist: playlist, channel: channel }
+    let(:new_playlist) { FactoryGirl.create :playlist, user: user }
+    let(:attributes) { { id: resource.id, playlist_id: new_playlist.id } }
+    let(:update_path) { subscription_path resource }
+    let(:invalid_update_path) { subscription_path id: 999999 }
 
-    it "does not allow an unauthenticated request" do
-      put subscription_path(subscription), params: attributes
-      assert_response :unauthorized
+    context "when the playlist exists" do
+      it_behaves_like "an updatable resource", "Subscription", true
     end
 
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        before { put subscription_path(subscription), params: attributes, headers: headers }
-
-        it "returns status code 204" do
-          expect(response).to have_http_status(204)
-        end
-      end
-
-      context "when the request is invalid" do
-        let(:invalid_attributes) { { id: subscription.id, playlist_id: "unknown-playlist" } }
-        before { put subscription_path(subscription), params: invalid_attributes, headers: headers }
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
-
-        it "returns a validation failure message" do
-          expect(response.body).to match(/Couldn't find Playlist/)
-        end
-      end
+    context "when the playlist does not exist" do
+      before { put update_path, params: { id: resource.id, playlist_id: 999999 }, headers: headers }
+      it_behaves_like "a request for a missing resource", "Playlist"
     end
   end
 
   describe "DELETE /subscriptions/:id" do
-    it "does not allow an unauthenticated request" do
-      delete subscription_path(subscription)
-      assert_response :unauthorized
-    end
-
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        before { delete subscription_path(subscription), headers: headers }
-
-        it "returns status code 204" do
-          expect(response).to have_http_status(204)
-        end
-      end
-
-      context "when the request is invalid" do
-        before { delete subscription_path("unknown-subscription"), headers: headers }
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
-      end
-    end
+    let(:resource) { FactoryGirl.create :subscription, playlist: playlist, channel: channel }
+    let(:destroy_path) { subscription_path resource }
+    let(:invalid_destroy_path) { subscription_path id: 999999 }
+    it_behaves_like "a destroyable resource", "Subscription"
   end
 end

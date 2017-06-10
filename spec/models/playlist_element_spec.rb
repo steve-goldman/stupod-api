@@ -9,6 +9,8 @@ RSpec.describe PlaylistElement, type: :model do
     subject { FactoryGirl.build :playlist_element }
     it { should validate_presence_of :playlist }
     it { should validate_presence_of :item }
+    it { should validate_presence_of :position }
+    it { should validate_numericality_of(:position).only_integer }
   end
 
   describe "associations" do
