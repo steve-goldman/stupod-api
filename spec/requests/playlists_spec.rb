@@ -68,22 +68,9 @@ RSpec.describe "Playlists API", type: :request do
   end
 
   describe "DELETE /playlists/:id" do
-    context "when the request is not authenticated" do
-      before { delete playlist_path(playlists.first) }
-      it_behaves_like "an unauthenticated request"
-    end
-
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        let(:resource) { playlists.first }
-        before { delete playlist_path(resource), headers: headers }
-        it_behaves_like "a destroy request"
-      end
-
-      context "when the request is invalid" do
-        before { delete playlist_path(other_playlists.first), headers: headers }
-        it_behaves_like "a request for a missing resource", "Playlist"
-      end
-    end
+    let(:resource) { playlists.first }
+    let(:destroy_path) { playlist_path resource }
+    let(:invalid_destroy_path) { playlist_path id: 999999 }
+    it_behaves_like "a destroyable resource", "Playlist"
   end
 end

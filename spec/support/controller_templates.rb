@@ -29,6 +29,25 @@ shared_context "a showable resource" do |resourceName|
   end
 end
 
+shared_context "a destroyable resource" do |resourceName|
+  context "when the request is not authenticated" do
+    before { delete destroy_path }
+    it_behaves_like "an unauthenticated request"
+  end
+
+  context "when the request is authenticated" do
+    context "when the resource exists" do
+      before { delete destroy_path, headers: headers }
+      it_behaves_like "a destroy request"
+    end
+
+    context "when the resource does not exist" do
+      before { delete invalid_destroy_path, headers: headers }
+      it_behaves_like "a request for a missing resource", resourceName
+    end
+  end
+end
+
 shared_context "an unauthenticated request" do
   it "has status code 401" do
     expect(response).to have_http_status(401)

@@ -60,22 +60,9 @@ RSpec.describe "Subscriptions API", type: :request do
   end
 
   describe "DELETE /subscriptions/:id" do
-    context "when the request is not authenticated" do
-      before { delete subscription_path(subscription) }
-      it_behaves_like "an unauthenticated request"
-    end
-
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        let(:resource) { subscription }
-        before { delete subscription_path(resource), headers: headers }
-        it_behaves_like "a destroy request"
-      end
-
-      context "when the request is invalid" do
-        before { delete subscription_path("unknown-subscription"), headers: headers }
-        it_behaves_like "a request for a missing resource", "Subscription"
-      end
-    end
+    let(:resource) { subscription }
+    let(:destroy_path) { subscription_path resource }
+    let(:invalid_destroy_path) { subscription_path id: 999999 }
+    it_behaves_like "a destroyable resource", "Subscription"
   end
 end
