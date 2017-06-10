@@ -23,26 +23,17 @@ RSpec.describe "PlaylistElementss API", type: :request do
   end
 
   describe "POST /playlists/:playlist_id/playlist_elements" do
-    let(:position) { 0 }
+    let(:create_path) { playlist_playlist_elements_path playlist }
     let(:item) { playlist_elements.first.item }
-    let(:attributes) { { item_id: item.id,
-                         position: position } }
+    let(:attributes) { { item_id: item.id, position: 1 } }
 
-    context "when the request is not authenticated" do
-      before { post playlist_playlist_elements_path(playlist), params: attributes }
-      it_behaves_like "an unauthenticated request"
+    context "when the playlist exists" do
+      it_behaves_like "a createable resource"
     end
 
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        before { post playlist_playlist_elements_path(playlist), params: attributes, headers: headers }
-        it_behaves_like "a create request"
-      end
-
-      context "when the request is invalid" do
-        before { post playlist_playlist_elements_path(playlist), headers: headers } # missing params
-        it_behaves_like "an unprocessable request"
-      end
+    context "when the playlist does not exist" do
+      before { post playlist_playlist_elements_path(playlist_id: 999999), params: attributes, headers: headers }
+      it_behaves_like "a request for a missing resource", "Playlist"
     end
   end
 

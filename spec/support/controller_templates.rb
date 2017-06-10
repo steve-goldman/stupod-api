@@ -76,6 +76,27 @@ shared_context "an updatable resource" do |resourceName, skip_invalid = false|
   end
 end
 
+shared_context "a createable resource" do |skip_invalid = false|
+  context "when the request is not authenticated" do
+    before { post create_path, params: attributes }
+    it_behaves_like "an unauthenticated request"
+  end
+
+  context "when the request is authenticated" do
+    context "when the request is valid" do
+      before { post create_path, params: attributes, headers: headers }
+      it_behaves_like "a create request"
+    end
+
+    unless skip_invalid
+      context "when the request is invalid" do
+        before { post create_path, headers: headers } # missing params
+        it_behaves_like "an unprocessable request"
+      end
+    end
+  end
+end
+
 shared_context "an unauthenticated request" do
   it "has status code 401" do
     expect(response).to have_http_status(401)

@@ -7,36 +7,23 @@ RSpec.describe "Channels API", type: :request do
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "POST /create" do
+    let(:create_path) { channels_path }
+    let(:attributes) { { url: Faker::Internet.url } }
     let(:existing_url) { channels.first.url }
-    let(:new_url) { "http://path/to/feed.xml" }
-    let(:not_loadable_url) { "http://bad/url" }
     let(:attributes_exists) { { url: existing_url } }
-    let(:attributes_new) { { url: new_url } }
-    let(:attributes_not_loadable) { { url: not_loadable_url } }
+    before { allow_any_instance_of(ChannelLoader)
+             .to receive(:load).and_return(FactoryGirl.build :channel) }
+    it_behaves_like "a createable resource"
 
-    context "when the request is not authenticated" do
-      before { post channels_path, params: attributes_exists }
-      it_behaves_like "an unauthenticated request"
+    context "when the channel exists" do
+      before { post channels_path, params: attributes_exists, headers: headers }
+      it_behaves_like "a create request"
     end
 
-    context "when the request is authenticated" do
-      context "when the channel exists" do
-        before { post channels_path, params: attributes_exists, headers: headers }
-        it_behaves_like "a create request"
-      end
-
-      context "when the channel is new" do
-        before { allow_any_instance_of(ChannelLoader)
-                 .to receive(:load).and_return(FactoryGirl.build(:channel, url: new_url)) }
-        before { post channels_path, params: attributes_new, headers: headers }
-        it_behaves_like "a create request"
-      end
-
-      context "when the channel is not loadable" do
-        before { allow_any_instance_of(ChannelLoader).to receive(:load).and_raise }
-        before { post channels_path, params: attributes_not_loadable, headers: headers }
+    context "when the channel is not loadable" do
+      before { allow_any_instance_of(ChannelLoader).to receive(:load).and_raise }
+      before { post channels_path, params: attributes, headers: headers }
         it_behaves_like "an unprocessable request", "Unable to load channel"
-      end
     end
   end
 

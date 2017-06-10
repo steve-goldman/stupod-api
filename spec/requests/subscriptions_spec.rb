@@ -15,24 +15,17 @@ RSpec.describe "Subscriptions API", type: :request do
   end
 
   describe "POST /subscriptions" do
-    let!(:newChannel) { FactoryGirl.create :channel }
-    let(:attributes) { { channel_id: newChannel.id, playlist_id: playlist.id } }
+    let(:create_path) { subscriptions_path }
+    let!(:new_channel) { FactoryGirl.create :channel }
+    let(:attributes) { { channel_id: new_channel.id, playlist_id: playlist.id } }
 
-    context "when the request is not authenticated" do
-      before { post subscriptions_path, params: attributes }
-      it_behaves_like "an unauthenticated request"
+    context "when the playlist exists" do
+      it_behaves_like "a createable resource", true
     end
 
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        before { post subscriptions_path, params: attributes, headers: headers }
-        it_behaves_like "a create request"
-      end
-
-      context "when the playlist does not exist" do
-        before { post subscriptions_path, headers: headers } # missing params
-        it_behaves_like "a request for a missing resource", "Playlist"
-      end
+    context "when the playlist does not exist" do
+      before { post create_path, params: { channel_id: new_channel.id, playlist_id: 999999 }, headers: headers }
+      it_behaves_like "a request for a missing resource", "Playlist"
     end
   end
 
@@ -42,7 +35,15 @@ RSpec.describe "Subscriptions API", type: :request do
     let(:attributes) { { id: resource.id, playlist_id: new_playlist.id } }
     let(:update_path) { subscription_path resource }
     let(:invalid_update_path) { subscription_path id: 999999 }
-    it_behaves_like "an updatable resource", "Subscription", true
+
+    context "when the playlist exists" do
+      it_behaves_like "an updatable resource", "Subscription", true
+    end
+
+    context "when the playlist does not exist" do
+      before { put update_path, params: { id: resource.id, playlist_id: 999999 }, headers: headers }
+      it_behaves_like "a request for a missing resource", "Playlist"
+    end
   end
 
   describe "DELETE /subscriptions/:id" do

@@ -22,25 +22,9 @@ RSpec.describe "Playlists API", type: :request do
   end
 
   describe "POST /playlists" do
-    let(:name) { Faker::Name.name }
-    let(:attributes) { { name: name } }
-
-    context "when the request is not authenticated" do
-      before { post playlists_path, params: attributes }
-      it_behaves_like "an unauthenticated request"
-    end
-
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        before { post playlists_path, params: attributes, headers: headers }
-        it_behaves_like "a create request"
-      end
-
-      context "when the request is invalid" do
-        before { post playlists_path, headers: headers } # missing params
-        it_behaves_like "an unprocessable request"
-      end
-    end
+    let(:create_path) { playlists_path }
+    let(:attributes) { { name: Faker::Name.name } }
+    it_behaves_like "a createable resource"
   end
 
   describe "PUT /playlists/:id" do
