@@ -95,19 +95,14 @@ RSpec.describe "PlaylistElementss API", type: :request do
 
     context "when the request is authenticated" do
       context "when the request is valid" do
-        before { delete playlist_playlist_element_path(playlist, playlist_elements.first), headers: headers }
-
-        it "returns status code 204" do
-          expect(response).to have_http_status(204)
-        end
+        let(:resource) { playlist_elements.first }
+        before { delete playlist_playlist_element_path(playlist, resource), headers: headers }
+        it_behaves_like "a destroy request"
       end
 
       context "when the request is invalid" do
         before { delete playlist_playlist_element_path(other_playlist, playlist_elements.first), headers: headers }
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
+        it_behaves_like "a request for a missing resource", "Playlist"
       end
     end
   end

@@ -98,19 +98,14 @@ RSpec.describe "Subscriptions API", type: :request do
 
     context "when the request is authenticated" do
       context "when the request is valid" do
-        before { delete subscription_path(subscription), headers: headers }
-
-        it "returns status code 204" do
-          expect(response).to have_http_status(204)
-        end
+        let(:resource) { subscription }
+        before { delete subscription_path(resource), headers: headers }
+        it_behaves_like "a destroy request"
       end
 
       context "when the request is invalid" do
         before { delete subscription_path("unknown-subscription"), headers: headers }
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
+        it_behaves_like "a request for a missing resource", "Subscription"
       end
     end
   end
