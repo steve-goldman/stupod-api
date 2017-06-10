@@ -10,9 +10,9 @@ RSpec.describe "Subscriptions API", type: :request do
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /subscriptions" do
-    it "does not allow an unauthenticated request" do
-      get subscriptions_path
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { get subscriptions_path }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -32,9 +32,9 @@ RSpec.describe "Subscriptions API", type: :request do
     let!(:newChannel) { FactoryGirl.create :channel }
     let(:attributes) { { channel_id: newChannel.id, playlist_id: playlist.id } }
 
-    it "does not allow an unauthenticated request" do
-      post subscriptions_path, params: attributes
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { post subscriptions_path, params: attributes }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -68,9 +68,9 @@ RSpec.describe "Subscriptions API", type: :request do
     let!(:newPlaylist) { FactoryGirl.create :playlist, user: user }
     let(:attributes) { { id: subscription.id, playlist_id: newPlaylist.id } }
 
-    it "does not allow an unauthenticated request" do
-      put subscription_path(subscription), params: attributes
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { put subscription_path(subscription), params: attributes }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -98,9 +98,9 @@ RSpec.describe "Subscriptions API", type: :request do
   end
 
   describe "DELETE /subscriptions/:id" do
-    it "does not allow an unauthenticated request" do
-      delete subscription_path(subscription)
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { delete subscription_path(subscription) }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do

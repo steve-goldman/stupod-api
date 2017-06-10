@@ -8,9 +8,9 @@ RSpec.describe "Items API" do
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /channels/:channel_id/items" do
-    it "does not allow an unauthenticated request" do
-      get channel_items_path(channel)
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { get channel_items_path(channel) }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -41,9 +41,9 @@ RSpec.describe "Items API" do
   end
 
   describe "GET /channels/:channel_id/items/:id" do
-    it "does not allow an unauthenticated request" do
-      get channel_item_path(channel, items.first)
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { get channel_item_path(channel, items.first) }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do

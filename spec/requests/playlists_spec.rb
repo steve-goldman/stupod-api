@@ -10,9 +10,9 @@ RSpec.describe "Playlists API", type: :request do
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /playlists" do
-    it "does not allow an unauthenticated request" do
-      get playlists_path
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { get playlists_path }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -29,9 +29,9 @@ RSpec.describe "Playlists API", type: :request do
   end
 
   describe "GET /playlists/:id" do
-    it "does not allow an unauthenticated request" do
-      get playlist_path(playlists.first)
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { get playlist_path(playlists.first) }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -78,9 +78,9 @@ RSpec.describe "Playlists API", type: :request do
     let(:name) { Faker::Name.name }
     let(:attributes) { { name: name } }
 
-    it "does not allow an unauthenticated request" do
-      post playlists_path, params: attributes
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { post playlists_path, params: attributes }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -115,9 +115,9 @@ RSpec.describe "Playlists API", type: :request do
     let(:newName) { Faker::Name.name }
     let(:attributes) { { id: playlists.first.id, name: newName } }
 
-    it "does not allow an unauthenticated request" do
-      put playlist_path(playlists.first), params: attributes
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { put playlist_path(playlists.first), params: attributes}
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -145,9 +145,9 @@ RSpec.describe "Playlists API", type: :request do
   end
 
   describe "DELETE /playlists/:id" do
-    it "does not allow an unauthenticated request" do
-      delete playlist_path(playlists.first)
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { delete playlist_path(playlists.first) }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do

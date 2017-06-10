@@ -14,9 +14,9 @@ RSpec.describe "Channels API", type: :request do
     let(:attributes_new) { { url: new_url } }
     let(:attributes_not_loadable) { { url: not_loadable_url } }
 
-    it "does not allow an unauthenticated request" do
-      post channels_path
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { post channels_path, params: attributes_exists }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -58,9 +58,9 @@ RSpec.describe "Channels API", type: :request do
   end
 
   describe "GET /channels" do
-    it "does not allow an unauthenticated request" do
-      get channels_path
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { get channels_path }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -77,9 +77,9 @@ RSpec.describe "Channels API", type: :request do
   end
 
   describe "GET /channels/:id" do
-    it "does not allow an unauthenticated request" do
-      get channel_path(channels.first)
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { get channel_path(channels.first) }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do

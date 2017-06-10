@@ -11,9 +11,9 @@ RSpec.describe "PlaylistElementss API", type: :request do
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /playlists/:playlist_id/playlist_elements" do
-    it "does not allow an unauthenticated request" do
-      get playlist_playlist_elements_path(playlist)
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { get playlist_playlist_elements_path(playlist) }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -35,9 +35,9 @@ RSpec.describe "PlaylistElementss API", type: :request do
     let(:attributes) { { item_id: item.id,
                          position: position } }
 
-    it "does not allow an unauthenticated request" do
-      post playlist_playlist_elements_path(playlist), params: attributes
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { post playlist_playlist_elements_path(playlist), params: attributes }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -71,9 +71,9 @@ RSpec.describe "PlaylistElementss API", type: :request do
     let(:newPosition) { 1 }
     let(:attributes) { { id: playlist_elements.first.id, position: newPosition } }
 
-    it "does not allow an unauthenticated request" do
-      put playlist_playlist_element_path(playlist, playlist_elements.first), params: attributes
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { put playlist_playlist_element_path(playlist, playlist_elements.first), params: attributes }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
@@ -88,9 +88,9 @@ RSpec.describe "PlaylistElementss API", type: :request do
   end
 
   describe "DELETE /playlists/:playlist_id/playlist_elements/:id" do
-    it "does not allow an unauthenticated request" do
-      delete playlist_playlist_element_path(playlist, playlist_elements.first)
-      assert_response :unauthorized
+    context "when the request is not authenticated" do
+      before { delete playlist_playlist_element_path(playlist, playlist_elements.first) }
+      it_behaves_like "an unauthenticated request"
     end
 
     context "when the request is authenticated" do
