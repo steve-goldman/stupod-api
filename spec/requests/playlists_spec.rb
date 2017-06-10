@@ -17,14 +17,7 @@ RSpec.describe "Playlists API", type: :request do
 
     context "when the request is authenticated" do
       before { get playlists_path, headers: headers }
-
-      it "returns playlists" do
-        expect(json).to_not be_empty
-      end
-
-      it "returns status code 200" do
-        expect(response).to have_http_status(200)
-      end
+      it_behaves_like "an index request"
     end
   end
 

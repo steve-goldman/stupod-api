@@ -17,14 +17,14 @@ RSpec.describe "PlaylistElementss API", type: :request do
     end
 
     context "when the request is authenticated" do
-      before { get playlist_playlist_elements_path(playlist), headers: headers }
-
-      it "returns playlists" do
-        expect(json).to_not be_empty
+      context "when the playlist exists" do
+        before { get playlist_playlist_elements_path(playlist), headers: headers }
+        it_behaves_like "an index request"
       end
 
-      it "returns status code 200" do
-        expect(response).to have_http_status(200)
+      context "when the playlist does not exist" do
+        before { get playlist_playlist_elements_path(playlist_id: 999999), headers: headers }
+        it_behaves_like "a request for a missing resource"
       end
     end
   end

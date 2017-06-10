@@ -16,26 +16,12 @@ RSpec.describe "Items API" do
     context "when the request is authenticated" do
       context "when channel exists" do
         before { get channel_items_path(channel), headers: headers }
-
-        it "returns status code 200" do
-          expect(response).to have_http_status(200)
-        end
-
-        it "returns all todo items" do
-          expect(json.size).to eq(items.count)
-        end
+        it_behaves_like "an index request"
       end
 
       context "when channel does not exist" do
         before { get channel_items_path(channel_id: 999999), headers: headers }
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
-
-        it "returns a not found message" do
-          expect(response.body).to match(/Couldn't find Channel/)
-        end
+        it_behaves_like "a request for a missing resource", "Channel"
       end
     end
   end
