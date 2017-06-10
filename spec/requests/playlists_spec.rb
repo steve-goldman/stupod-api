@@ -44,27 +44,12 @@ RSpec.describe "Playlists API", type: :request do
   end
 
   describe "PUT /playlists/:id" do
-    let(:name) { Faker::Name.name }
-    let(:newName) { Faker::Name.name }
-    let(:attributes) { { id: playlists.first.id, name: newName } }
-
-    context "when the request is not authenticated" do
-      before { put playlist_path(playlists.first), params: attributes}
-      it_behaves_like "an unauthenticated request"
-    end
-
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        before { put playlist_path(playlists.first), params: attributes, headers: headers }
-        it_behaves_like "an update request"
-      end
-
-      context "when the request is invalid" do
-        let(:invalid_attributes) { { id: playlists.first.id, name: playlists.last.name } }
-        before { put playlist_path(playlists.first), params: invalid_attributes, headers: headers }
-        it_behaves_like "an unprocessable request"
-      end
-    end
+    let(:resource) { playlists.first }
+    let(:attributes) { { id: resource.id, name: Faker::Name.name } }
+    let(:invalid_attributes) { { id: resource.id, name: "" } }
+    let(:update_path) { playlist_path resource }
+    let(:invalid_update_path) { playlist_path id: 999999 }
+    it_behaves_like "an updatable resource"
   end
 
   describe "DELETE /playlists/:id" do

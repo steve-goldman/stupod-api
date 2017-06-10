@@ -37,26 +37,12 @@ RSpec.describe "Subscriptions API", type: :request do
   end
 
   describe "PUT /subscriptions/:id" do
-    let!(:newPlaylist) { FactoryGirl.create :playlist, user: user }
-    let(:attributes) { { id: subscription.id, playlist_id: newPlaylist.id } }
-
-    context "when the request is not authenticated" do
-      before { put subscription_path(subscription), params: attributes }
-      it_behaves_like "an unauthenticated request"
-    end
-
-    context "when the request is authenticated" do
-      context "when the request is valid" do
-        before { put subscription_path(subscription), params: attributes, headers: headers }
-        it_behaves_like "an update request"
-      end
-
-      context "when the playlist does not exist" do
-        let(:invalid_attributes) { { id: subscription.id, playlist_id: "unknown-playlist" } }
-        before { put subscription_path(subscription), params: invalid_attributes, headers: headers }
-        it_behaves_like "a request for a missing resource", "Playlist"
-      end
-    end
+    let(:resource) { subscription }
+    let!(:new_playlist) { FactoryGirl.create :playlist, user: user }
+    let(:attributes) { { id: resource.id, playlist_id: new_playlist.id } }
+    let(:update_path) { subscription_path resource }
+    let(:invalid_update_path) { subscription_path id: 999999 }
+    it_behaves_like "an updatable resource", "Subscription", true
   end
 
   describe "DELETE /subscriptions/:id" do

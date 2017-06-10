@@ -47,31 +47,20 @@ RSpec.describe "PlaylistElementss API", type: :request do
   end
 
   describe "PUT /playlists/:playlist_id/playlist_elements/:id" do
-    let(:newPosition) { 1 }
-    let(:attributes) { { id: playlist_elements.first.id, position: newPosition } }
+    let(:resource) { playlist_elements.first }
+    let(:new_position) { 1 }
+    let(:attributes) { { id: resource.id, position: new_position } }
+    let(:invalid_attributes) { { id: resource.id, position: "invalid-position" } }
 
-    context "when the request is not authenticated" do
-      before { put playlist_playlist_element_path(playlist, playlist_elements.first), params: attributes }
-      it_behaves_like "an unauthenticated request"
+    context "when the playlist exists" do
+      let(:update_path) { playlist_playlist_element_path playlist, resource }
+      let(:invalid_update_path) { playlist_playlist_element_path playlist_id: playlist.id, id: 999999 }
+      it_behaves_like "an updatable resource"
     end
 
-    context "when the request is authenticated" do
-      context "when the playlist exists" do
-        context "when the playlist element exists" do
-          before { put playlist_playlist_element_path(playlist, playlist_elements.first), params: attributes, headers: headers }
-          it_behaves_like "an update request"
-        end
-
-        context "when the playlist element does not exist" do
-          before { put playlist_playlist_element_path(playlist_id: playlist.id, id: 999999), params: attributes, headers: headers }
-          it_behaves_like "a request for a missing resource", "PlaylistElement"
-        end
-      end
-
-      context "when the playlist does not exist" do
-        before { put playlist_playlist_element_path(playlist_id: 999999, id: playlist_elements.first.id), params: attributes, headers: headers }
-        it_behaves_like "a request for a missing resource", "Playlist"
-      end
+    context "when the playlist does not exist" do
+      before { put playlist_playlist_element_path(playlist_id: 999999, id: resource.id), params: attributes, headers: headers }
+      it_behaves_like "a request for a missing resource", "Playlist"
     end
   end
 
