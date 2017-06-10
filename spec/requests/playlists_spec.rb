@@ -29,40 +29,19 @@ RSpec.describe "Playlists API", type: :request do
 
     context "when the request is authenticated" do
       context "when the record exists and belongs to the user" do
-        before { get playlist_path(playlists.first), headers: headers }
-
-        it "returns the playlist" do
-          expect(json).to_not be_empty
-          expect(json["id"]).to eq(playlists.first.id)
-        end
-
-        it "returns status code 200" do
-          expect(response).to have_http_status(200)
-        end
+        let(:resource) { playlists.first }
+        before { get playlist_path(resource), headers: headers }
+        it_behaves_like "a show request"
       end
 
       context "when the record exists and belongs to another user" do
         before { get playlist_path(other_playlists.first), headers: headers }
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
-
-        it "returns a not found message" do
-          expect(response.body).to match(/Couldn't find Playlist/)
-        end
+        it_behaves_like "a request for a missing resource", "Playlist"
       end
 
       context "when the record does not exist" do
         before { get playlist_path(99999), headers: headers }
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
-
-        it "returns a not found message" do
-          expect(response.body).to match(/Couldn't find Playlist/)
-        end
+        it_behaves_like "a request for a missing resource", "Playlist"
       end
     end
   end

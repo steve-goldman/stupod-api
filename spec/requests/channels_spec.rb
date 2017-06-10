@@ -77,28 +77,14 @@ RSpec.describe "Channels API", type: :request do
 
     context "when the request is authenticated" do
       context "when the record exists" do
-        before { get channel_path(channels.first), headers: headers }
-
-        it "returns the channel" do
-          expect(json).to_not be_empty
-          expect(json["id"]).to eq(channels.first.id)
-        end
-
-        it "returns status code 200" do
-          expect(response).to have_http_status(200)
-        end
+        let(:resource) { channels.first }
+        before { get channel_path(resource), headers: headers }
+        it_behaves_like "a show request"
       end
 
       context "when the record does not exist" do
         before { get channel_path(id: 99999), headers: headers }
-
-        it "returns status code 404" do
-          expect(response).to have_http_status(404)
-        end
-
-        it "returns a not found message" do
-          expect(response.body).to match(/Couldn't find Channel/)
-        end
+        it_behaves_like "a request for a missing resource", "Channel"
       end
     end
   end
