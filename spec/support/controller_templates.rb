@@ -10,6 +10,25 @@ shared_context "an indexable resource" do
   end
 end
 
+shared_context "a showable resource" do |resourceName|
+  context "when the request is not authenticated" do
+    before { get show_path }
+    it_behaves_like "an unauthenticated request"
+  end
+
+  context "when the request is authenticated" do
+    context "when the resource exists" do
+      before { get show_path, headers: headers }
+      it_behaves_like "a show request"
+    end
+
+    context "when the record does not exist" do
+      before { get invalid_show_path, headers: headers }
+      it_behaves_like "a request for a missing resource", resourceName
+    end
+  end
+end
+
 shared_context "an unauthenticated request" do
   it "has status code 401" do
     expect(response).to have_http_status(401)

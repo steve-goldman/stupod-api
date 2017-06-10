@@ -18,7 +18,7 @@ RSpec.describe "PlaylistElementss API", type: :request do
 
     context "when the playlist does not exist" do
       before { get playlist_playlist_elements_path(playlist_id: 999999), headers: headers }
-      it_behaves_like "a request for a missing resource"
+      it_behaves_like "a request for a missing resource", "Playlist"
     end
   end
 

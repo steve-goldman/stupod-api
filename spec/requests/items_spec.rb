@@ -20,22 +20,17 @@ RSpec.describe "Items API" do
   end
 
   describe "GET /channels/:channel_id/items/:id" do
-    context "when the request is not authenticated" do
-      before { get channel_item_path(channel, items.first) }
-      it_behaves_like "an unauthenticated request"
+    let(:resource) { items.first }
+    let(:show_path) { channel_item_path channel, resource }
+    let(:invalid_show_path) { channel_item_path channel_id: channel.id, id: 999999 }
+
+    context "when the channel exists" do
+      it_behaves_like "a showable resource", "Item"
     end
 
-    context "when the request is authenticated" do
-      context "when item exists" do
-        let(:resource) { items.first }
-        before { get channel_item_path(channel, resource), headers: headers }
-        it_behaves_like "a show request"
-      end
-
-      context "when item does not exist" do
-        before { get channel_item_path(channel, 999999), headers: headers }
-        it_behaves_like "a request for a missing resource", "Item"
-      end
+    context "when the channel does not exist" do
+      before { get channel_item_path(channel_id: 999999, id: resource.id), headers: headers }
+      it_behaves_like "a request for a missing resource", "Channel"
     end
   end
 end

@@ -46,22 +46,9 @@ RSpec.describe "Channels API", type: :request do
   end
 
   describe "GET /channels/:id" do
-    context "when the request is not authenticated" do
-      before { get channel_path(channels.first) }
-      it_behaves_like "an unauthenticated request"
-    end
-
-    context "when the request is authenticated" do
-      context "when the record exists" do
-        let(:resource) { channels.first }
-        before { get channel_path(resource), headers: headers }
-        it_behaves_like "a show request"
-      end
-
-      context "when the record does not exist" do
-        before { get channel_path(id: 99999), headers: headers }
-        it_behaves_like "a request for a missing resource", "Channel"
-      end
-    end
+    let(:resource) { channels.first }
+    let(:show_path) { channel_path resource }
+    let(:invalid_show_path) { channel_path id: 999999 }
+    it_behaves_like "a showable resource", "Channel"
   end
 end

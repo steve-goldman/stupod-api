@@ -15,28 +15,10 @@ RSpec.describe "Playlists API", type: :request do
   end
 
   describe "GET /playlists/:id" do
-    context "when the request is not authenticated" do
-      before { get playlist_path(playlists.first) }
-      it_behaves_like "an unauthenticated request"
-    end
-
-    context "when the request is authenticated" do
-      context "when the record exists and belongs to the user" do
-        let(:resource) { playlists.first }
-        before { get playlist_path(resource), headers: headers }
-        it_behaves_like "a show request"
-      end
-
-      context "when the record exists and belongs to another user" do
-        before { get playlist_path(other_playlists.first), headers: headers }
-        it_behaves_like "a request for a missing resource", "Playlist"
-      end
-
-      context "when the record does not exist" do
-        before { get playlist_path(99999), headers: headers }
-        it_behaves_like "a request for a missing resource", "Playlist"
-      end
-    end
+    let(:resource) { playlists.first }
+    let(:show_path) { playlist_path resource }
+    let(:invalid_show_path) { playlist_path id: 999999 }
+    it_behaves_like "a showable resource", "Playlist"
   end
 
   describe "POST /playlists" do
