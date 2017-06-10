@@ -41,15 +41,8 @@ RSpec.describe "Channels API", type: :request do
   end
 
   describe "GET /channels" do
-    context "when the request is not authenticated" do
-      before { get channels_path }
-      it_behaves_like "an unauthenticated request"
-    end
-
-    context "when the request is authenticated" do
-      before { get channels_path, headers: headers }
-      it_behaves_like "an index request"
-    end
+    let(:index_path) { channels_path }
+    it_behaves_like "an indexable resource"
   end
 
   describe "GET /channels/:id" do

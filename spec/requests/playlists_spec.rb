@@ -10,15 +10,8 @@ RSpec.describe "Playlists API", type: :request do
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /playlists" do
-    context "when the request is not authenticated" do
-      before { get playlists_path }
-      it_behaves_like "an unauthenticated request"
-    end
-
-    context "when the request is authenticated" do
-      before { get playlists_path, headers: headers }
-      it_behaves_like "an index request"
-    end
+    let(:index_path) { playlists_path }
+    it_behaves_like "an indexable resource"
   end
 
   describe "GET /playlists/:id" do

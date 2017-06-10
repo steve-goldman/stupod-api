@@ -11,21 +11,14 @@ RSpec.describe "PlaylistElementss API", type: :request do
   let(:headers) { { authorization: "Bearer #{token}" } }
 
   describe "GET /playlists/:playlist_id/playlist_elements" do
-    context "when the request is not authenticated" do
-      before { get playlist_playlist_elements_path(playlist) }
-      it_behaves_like "an unauthenticated request"
+    context "when the playlist exists" do
+      let(:index_path) { playlist_playlist_elements_path(playlist) }
+      it_behaves_like "an indexable resource"
     end
 
-    context "when the request is authenticated" do
-      context "when the playlist exists" do
-        before { get playlist_playlist_elements_path(playlist), headers: headers }
-        it_behaves_like "an index request"
-      end
-
-      context "when the playlist does not exist" do
-        before { get playlist_playlist_elements_path(playlist_id: 999999), headers: headers }
-        it_behaves_like "a request for a missing resource"
-      end
+    context "when the playlist does not exist" do
+      before { get playlist_playlist_elements_path(playlist_id: 999999), headers: headers }
+      it_behaves_like "a request for a missing resource"
     end
   end
 

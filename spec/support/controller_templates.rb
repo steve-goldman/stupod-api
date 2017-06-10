@@ -1,3 +1,15 @@
+shared_context "an indexable resource" do
+  context "when the request is not authenticated" do
+    before { get index_path }
+    it_behaves_like "an unauthenticated request"
+  end
+
+  context "when the request is authenticated" do
+    before { get index_path, headers: headers }
+    it_behaves_like "an index request"
+  end
+end
+
 shared_context "an unauthenticated request" do
   it "has status code 401" do
     expect(response).to have_http_status(401)
